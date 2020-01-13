@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Interview.Models;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Interview.Services
 {
@@ -11,11 +10,11 @@ namespace Interview.Services
     {
         private List<Transaction> dataSet;
 
-        public JsonTransactionService(string jsonContent)
+        public JsonTransactionService(JArray jsonContent)
         {
             try
             {
-                this.dataSet = JsonConvert.DeserializeObject<List<Transaction>>(jsonContent);
+                this.dataSet = jsonContent.ToObject<List<Transaction>>();
             }
             catch (Exception)
             {
