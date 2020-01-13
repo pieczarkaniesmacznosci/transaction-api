@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Interview.Services
 {
-    public class JsonTransactionService
+    public class JsonTransactionService : ITransactionService
     {
         private List<Transaction> dataSet;
 
@@ -15,7 +15,7 @@ namespace Interview.Services
         {
             try
             {
-                JsonConvert.DeserializeObject<List<Transaction>>(jsonContent);
+                this.dataSet = JsonConvert.DeserializeObject<List<Transaction>>(jsonContent);
             }
             catch (Exception)
             {
@@ -28,24 +28,33 @@ namespace Interview.Services
             return this.dataSet;
         }
 
-        public Transaction GetTransaction(string Id)
+        public Transaction GetTransaction(string id)
         {
-            return new Transaction();
+            return this.dataSet.SingleOrDefault(t => t.Id == id);
         }
 
         public void AddTransaction(Transaction transaction)
         {
-
+            this.dataSet.Add(transaction);
         }
 
         public void EditTransaction(Transaction transaction)
         {
+            var transactionToEdit = this.dataSet.SingleOrDefault(t => t.Id == transaction.Id);
 
+            transactionToEdit.Id = transaction.Id;
+            transactionToEdit.ApplicationId = transaction.ApplicationId;
+            transactionToEdit.Amount = transaction.Amount;
+            transactionToEdit.Debit = transaction.Debit;
+            transactionToEdit.IsCleared = transaction.IsCleared;
+            transactionToEdit.PostingDate = transaction.PostingDate;
+            transactionToEdit.ClearedDate = transaction.ClearedDate;
+            transactionToEdit.Summary = transaction.Summary;
         }
 
-        public void DeleteTransaction(string Id)
+        public void DeleteTransaction(string id)
         {
-
+            this.dataSet.Remove(this.dataSet.SingleOrDefault(t=>t.Id == id));
         }
     }
 }

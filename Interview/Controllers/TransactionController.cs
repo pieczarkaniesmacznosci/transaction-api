@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Interview.Models;
+using Interview.Services;
 using Microsoft.Ajax.Utilities;
 
 namespace Interview.Controllers
@@ -12,6 +13,13 @@ namespace Interview.Controllers
     [Route("api/[controller]")]
     public class TransactionController : ApiController
     {
+        private ITransactionService transactionService;
+
+        public TransactionController(ITransactionService transactionService)
+        {
+            this.transactionService = transactionService;
+        }
+
         [HttpGet]
         public IEnumerable<Transaction> Get()
         {
