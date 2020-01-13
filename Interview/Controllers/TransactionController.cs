@@ -7,6 +7,7 @@ using System.Web.Http;
 using Interview.Models;
 using Interview.Services;
 using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json;
 
 namespace Interview.Controllers
 {
@@ -23,7 +24,7 @@ namespace Interview.Controllers
         [HttpGet]
         public IEnumerable<Transaction> Get()
         {
-            return new List<Transaction>();
+            return this.transactionService.GetAllTransactions();
         }
 
         [HttpGet]
@@ -35,7 +36,7 @@ namespace Interview.Controllers
                 throw new ArgumentNullException("Id not provided");
             }
 
-            return new Transaction();
+            return this.transactionService.GetTransaction(id);
         }
 
         [HttpPost]
@@ -46,6 +47,18 @@ namespace Interview.Controllers
                 throw new ArgumentNullException("Object to add not provided");
             }
 
+            Transaction addedTransaction;
+
+            try
+            {
+                addedTransaction = JsonConvert.DeserializeObject<Transaction>(transaction);
+            }
+            catch (JsonReaderException)
+            {
+                throw new FormatException($"Provided data not representing Data object: {transaction}");
+            }
+
+            this.transactionService.AddTransaction(addedTransaction);
         }
 
         [HttpPut]
@@ -56,6 +69,18 @@ namespace Interview.Controllers
                 throw new ArgumentNullException("Object to add not provided");
             }
 
+            Transaction addedTransaction;
+
+            try
+            {
+                addedTransaction = JsonConvert.DeserializeObject<Transaction>(transaction);
+            }
+            catch (JsonReaderException)
+            {
+                throw new FormatException($"Provided data not representing Data object: {transaction}");
+            }
+
+            this.transactionService.EditTransaction(addedTransaction);
         }
 
         [HttpDelete]
@@ -67,6 +92,7 @@ namespace Interview.Controllers
                 throw new ArgumentNullException("Id not provided");
             }
 
+            this.transactionService.DeleteTransaction(id);
         }
     }
 }
